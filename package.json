@@ -1,0 +1,36 @@
+{
+  "name": "wechatpay.js",
+  "version": "0.0.1",
+  "description": "Server-side utilities for mini-program.",
+  "main": "src/index.js",
+  "scripts": {
+    "eslintfix": "eslint src/**/*.js --fix",
+    "eslint": "eslint src/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhaotoday/mp-server.git"
+  },
+  "keywords": [
+    "mini program"
+  ],
+  "author": "zhaojintian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhaotoday/mp-server/issues"
+  },
+  "homepage": "https://github.com/zhaotoday/mp-server#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0"
+  },
+  "dependencies": {
+    "MD5": "^1.3.0",
+    "axios": "^0.18.0",
+    "xml2js": "^0.4.19"
+  }
+}
