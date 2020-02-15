@@ -1,6 +1,14 @@
 const md5 = require('MD5')
 const axios = require('axios')
 const helpers = require('./utils/helpers')
+const getRawBody = require('raw-body')
+const { promisify } = require('util')
+const XMLParser = require('xml2js').Parser
+
+const xmlParser = new XMLParser({
+  explicitArray: false,
+  ignoreAttrs: true
+})
 
 module.exports = class {
   constructor ({ appid, mch_id, key } = {}) {
@@ -43,5 +51,12 @@ module.exports = class {
       ...paymentParams,
       unifiedOrder
     }
+  }
+
+  async parseXml (req) {
+    const { xml } = await promisify(xmlParser.parseString)(
+      await getRawBody(req)
+    )
+    return xml
   }
 }
