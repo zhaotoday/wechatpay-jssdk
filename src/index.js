@@ -18,7 +18,7 @@ module.exports = class {
     return md5(querystring).toUpperCase()
   }
 
-  async requestPayment (options = {}) {
+  async createUnifiedOrder (options = {}) {
     const { appid, mch_id, key } = this
     const nonce_str = helpers.getNonceString(32)
     const trade_type = 'JSAPI'
