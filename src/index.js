@@ -18,11 +18,11 @@ module.exports = class {
   }
 
   sign (params) {
-    const querystring = Object.keys(params)
-      .filter(key => !!params[key] && key !== 'key')
-      .sort()
-      .map(key => `${key}=${params[key]}`)
-      .join('&') + '&key=' + params.key
+    const querystring = Object.keys(params).
+      filter(key => !!params[key] && key !== 'key').
+      sort().
+      map(key => `${key}=${params[key]}`).
+      join('&') + '&key=' + params.key
     return md5(querystring).toUpperCase()
   }
 
@@ -31,7 +31,14 @@ module.exports = class {
     const nonce_str = helpers.getNonceString(32)
     const trade_type = 'JSAPI'
     const sign_type = 'MD5'
-    const postData = { appid, mch_id, nonce_str, trade_type, sign_type, ...options }
+    const postData = {
+      appid,
+      mch_id,
+      nonce_str,
+      trade_type,
+      sign_type,
+      ...options
+    }
     const sign = this.sign({ key, ...postData })
     const { data } = await axios.request({
       method: 'POST',
@@ -51,6 +58,28 @@ module.exports = class {
       ...paymentParams,
       unifiedOrder
     }
+  }
+
+  async transfer (options = {}) {
+    const { mch_appid, mchid, key } = this
+    const nonce_str = helpers.getNonceString(32)
+    const sign_type = 'MD5'
+    const check_name = 'NO_CHECK'
+    const postData = {
+      mch_appid,
+      mchid,
+      nonce_str,
+      sign_type,
+      check_name,
+      ...options
+    }
+    const sign = this.sign({ key, ...postData })
+    const { data } = await axios.request({
+      method: 'POST',
+      url: 'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers',
+      data: helpers.buildXML({ sign, ...postData })
+    })
+    return data
   }
 
   async parseXml (req) {
