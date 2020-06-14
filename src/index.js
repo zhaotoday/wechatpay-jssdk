@@ -4,6 +4,7 @@ const helpers = require('./utils/helpers')
 const getRawBody = require('raw-body')
 const { promisify } = require('util')
 const XMLParser = require('xml2js').Parser
+const request = require('request-promise')
 
 const xmlParser = new XMLParser({
   explicitArray: false,
@@ -60,26 +61,25 @@ module.exports = class {
     }
   }
 
-  async transfer (options = {}) {
-    const { mch_appid, mchid, key } = this
+  async transfer (agentOptions, options = {}) {
+    const { appid, mch_id, key } = this
     const nonce_str = helpers.getNonceString(32)
-    const sign_type = 'MD5'
     const check_name = 'NO_CHECK'
     const postData = {
-      mch_appid,
-      mchid,
+      mch_appid: appid,
+      mchid: mch_id,
       nonce_str,
-      sign_type,
       check_name,
       ...options
     }
     const sign = this.sign({ key, ...postData })
-    const { data } = await axios.request({
+    const data = await request({
       method: 'POST',
       url: 'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers',
-      data: helpers.buildXML({ sign, ...postData })
+      body: helpers.buildXML({ sign, ...postData }),
+      agentOptions
     })
-    return data
+    return helpers.parseXML(data)
   }
 
   async parseXml (req) {
