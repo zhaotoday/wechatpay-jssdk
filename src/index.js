@@ -46,17 +46,40 @@ module.exports = class {
             data: helpers.buildXML({sign, ...postData})
         })
         const unifiedOrder = await helpers.parseXML(data)
-        const paymentParams = {
-            timeStamp: helpers.getTimeStamp(),
-            nonceStr: nonce_str,
-            package: `prepay_id=${unifiedOrder.prepay_id}`,
-            signType: 'MD5'
-        }
 
-        return {
-            paySign: this.sign({key, appId: this.appid, ...paymentParams}),
-            ...paymentParams,
-            unifiedOrder
+        if (options['trade_type'] === 'JSAPI') {
+            const paymentParams = {
+                timeStamp: helpers.getTimeStamp(),
+                nonceStr: nonce_str,
+                package: `prepay_id=${unifiedOrder.prepay_id}`,
+                signType: 'MD5'
+            }
+
+            return {
+                paySign: this.sign({key, appId: this.appid, ...paymentParams}),
+                ...paymentParams,
+                unifiedOrder
+            }
+        } else {
+            const paymentParams = {
+                timestamp: helpers.getTimeStamp(),
+                noncestr: nonce_str,
+                prepayid: unifiedOrder.prepay_id,
+                package: `Sign=WXPay`,
+            }
+
+            return {
+                appid,
+                partnerid: mch_id,
+                ...paymentParams,
+                sign: this.sign({
+                    key,
+                    appid: this.appid,
+                    partnerid: mch_id,
+                    ...paymentParams
+                }),
+                unifiedOrder
+            }
         }
     }
 
