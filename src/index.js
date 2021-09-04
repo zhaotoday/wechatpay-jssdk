@@ -33,7 +33,7 @@ module.exports = class {
     }
 
     const postData = {
-      appid,
+      appid: options.appid || appid,
       mch_id,
       nonce_str,
       sign_type,
