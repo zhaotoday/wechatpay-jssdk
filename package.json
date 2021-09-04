@@ -1,6 +1,6 @@
 {
   "name": "wechatpay.js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "wechatpay js sdk.",
   "main": "src/index.js",
   "scripts": {

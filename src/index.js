@@ -24,7 +24,8 @@ module.exports = class {
   }
 
   async createUnifiedOrder (options = {}) {
-    const {appid, mch_id, key} = this
+    const {mch_id, key} = this
+    const appid = options.appid || this.appid
     const nonce_str = helpers.getNonceString(32)
     const sign_type = 'MD5'
 
@@ -33,7 +34,7 @@ module.exports = class {
     }
 
     const postData = {
-      appid: options.appid || appid,
+      appid,
       mch_id,
       nonce_str,
       sign_type,
@@ -56,7 +57,7 @@ module.exports = class {
       }
 
       return {
-        paySign: this.sign({key, appId: this.appid, ...paymentParams}),
+        paySign: this.sign({key, appId: appid, ...paymentParams}),
         ...paymentParams,
         unifiedOrder
       }
@@ -74,7 +75,7 @@ module.exports = class {
         ...paymentParams,
         sign: this.sign({
           key,
-          appid: this.appid,
+          appid,
           partnerid: mch_id,
           ...paymentParams
         }),
