@@ -34,11 +34,11 @@ module.exports = class {
     }
 
     const postData = {
-      appid,
       mch_id,
       nonce_str,
       sign_type,
-      ...options
+      ...options,
+      appid
     }
     const sign = this.sign({key, ...postData})
     const {data} = await axios.request({
